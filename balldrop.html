@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$fum ball drop</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+            font-weight: bold;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .tower {
+            width: 10px;
+            height: 80vh;
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid red;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        #ball {
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            left: -65px;
+            transform: translateY(0);
+            transition: transform linear;
+        }
+
+        .countdown {
+            font-size: 2em;
+            margin: 20px 0;
+            text-align: center;
+            text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .bottom-platform {
+            width: 200px;
+            height: 20px;
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid red;
+            border-radius: 10px;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">$fum ball drop</div>
+    <div class="countdown" id="countdown">Loading...</div>
+    <div class="tower">
+        <img src="ball.png" id="ball" alt="$fum ball">
+    </div>
+    <div class="bottom-platform"></div>
+
+    <script>
+        function updateBallPosition() {
+            const now = new Date();
+            const midnight = new Date();
+            midnight.setHours(24, 0, 0, 0);
+            
+            const timeUntilMidnight = midnight - now;
+            const totalMillisInDay = 24 * 60 * 60 * 1000;
+            
+            const progress = 1 - (timeUntilMidnight / totalMillisInDay);
+            
+            const tower = document.querySelector('.tower');
+            const ball = document.getElementById('ball');
+            const towerHeight = tower.offsetHeight;
+            const ballHeight = ball.offsetHeight;
+            
+            const maxTravel = towerHeight - ballHeight;
+            
+            const position = progress * maxTravel;
+            ball.style.transform = `translateY(${position}px)`;
+            
+            const remainingSeconds = timeUntilMidnight / 1000;
+            ball.style.transitionDuration = `${remainingSeconds}s`;
+            
+            const hours = Math.floor(timeUntilMidnight / (60 * 60 * 1000));
+            const minutes = Math.floor((timeUntilMidnight % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((timeUntilMidnight % (60 * 1000)) / 1000);
+            
+            document.getElementById('countdown').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        updateBallPosition();
+        setInterval(updateBallPosition, 1000);
+    </script>
+</body>
+</html> 
